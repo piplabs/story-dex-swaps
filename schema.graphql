@@ -68,8 +68,10 @@ type TokenPair @entity {
   pool: String!
 }
 
-type TokenSwap @entity {
-  id: ID!
+type TokenSwap @entity(timeseries: true) {
+  id: Int8! # auto-increment
+	timestamp: Timestamp! # auto-set to block timestamp
+
   pair: TokenPair!
   tokenIn: Token!
   tokenOut: Token!
@@ -78,6 +80,16 @@ type TokenSwap @entity {
   swapInExact: Boolean!
   account: Account!
   exchange: DEX!
+
+	price: BigInt!
+	volume: BigInt!
+}
+
+type TokenVolume @aggregation(intervals: ["hour", "day"], source: "TokenSwap") {
+	id: Int8!
+	timestamp: Timestamp!
+	pair: TokenPair!
+	volume: BigInt! @aggregate(fn: "sum", arg: "volume")
 }
 
 type TokenAddLiquidity @entity {

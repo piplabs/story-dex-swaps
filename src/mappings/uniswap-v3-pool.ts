@@ -62,15 +62,24 @@ export function handleTokenSwap(event: Swap): void {
 
   const account = loadOrCreateAccount(event.params.sender);
 
+	const amount0 = event.params.amount0
+	const amount1 = event.params.amount1
+
+	const price = amount1.div(amount0); // TODO: need to use correct tokenIn and tokenOut
+
   const swapId =
     event.transaction.hash.toHex() + "-" + event.transactionLogIndex.toString();
   const swap = new TokenSwap(swapId);
   swap.pair = tokenPair.id;
+	// TODO: determine tokenIn and tokenOut based on `zeroForOne` internally
   swap.tokenIn = tokenPair.token0;
   swap.tokenOut = tokenPair.token1;
-  swap.swapIn = event.params.amount0;
-  swap.swapOut = event.params.amount1;
+  swap.swapIn = amount0;
+  swap.swapOut = amount1;
   swap.account = account.id;
   swap.exchange = tokenPair.exchange;
+	
+	swap.price = swap.swapOut.div(swap.swapIn);
+  swap.volume = swap.swapOut; // TODO: use the quote token as the volume
   swap.save();
 }

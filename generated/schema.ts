@@ -701,17 +701,30 @@ export class TokenSwap extends Entity {
     return changetype<TokenSwap | null>(store.get("TokenSwap", id));
   }
 
-  get id(): string {
+  get id(): i64 {
     let value = this.get("id");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return 0;
     } else {
-      return value.toString();
+      return value.toI64();
     }
   }
 
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
+  set id(value: i64) {
+    this.set("id", Value.fromI64(value));
+  }
+
+  get timestamp(): i64 {
+    let value = this.get("timestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toTimestamp();
+    }
+  }
+
+  set timestamp(value: i64) {
+    this.set("timestamp", Value.fromTimestamp(value));
   }
 
   get pair(): string {
@@ -816,6 +829,32 @@ export class TokenSwap extends Entity {
 
   set exchange(value: string) {
     this.set("exchange", Value.fromString(value));
+  }
+
+  get price(): BigInt {
+    let value = this.get("price");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set price(value: BigInt) {
+    this.set("price", Value.fromBigInt(value));
+  }
+
+  get volume(): BigInt {
+    let value = this.get("volume");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set volume(value: BigInt) {
+    this.set("volume", Value.fromBigInt(value));
   }
 }
 

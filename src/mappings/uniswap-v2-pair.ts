@@ -64,10 +64,16 @@ export function handleTokenSwap(event: Swap): void {
   swap.pair = tokenPair.id;
   swap.tokenIn = tokenPair.token0;
   swap.tokenOut = tokenPair.token1;
-  swap.swapIn = event.params.amount0In;
-  swap.swapOut = event.params.amount1Out;
-  swap.swapInExact = event.params.amount0In.gt(BigInt.fromString("0"));
+
+  const token0In = event.params.amount0In > BigInt.fromString("0");
+
+  swap.swapIn = token0In ? event.params.amount0In : event.params.amount1In;
+  swap.swapOut = token0In ? event.params.amount1Out : event.params.amount0Out;
+  swap.swapInExact = token0In ? event.params.amount0In.gt(BigInt.fromString("0")) : event.params.amount1In.gt(BigInt.fromString("0"));
   swap.account = account.id;
   swap.exchange = tokenPair.exchange;
+
+  swap.price = swap.swapOut.div(swap.swapIn);
+  swap.volume = swap.swapOut; // TODO: use the quote token as the volume
   swap.save();
 }
