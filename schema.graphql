@@ -1,0 +1,105 @@
+#
+# Token
+#
+
+type Token @entity {
+  id: ID!
+  name: String!
+  symbol: String!
+  decimals: Int!
+  totalSupply: BigInt!
+  circulatingSupply: BigInt!
+  balances: [TokenBalance!] @derivedFrom(field: "token")
+  approvals: [TokenApproval!] @derivedFrom(field: "token")
+  burns: [TokenBurn!] @derivedFrom(field: "token")
+}
+
+type Account @entity {
+  id: ID!
+  balances: [TokenBalance!] @derivedFrom(field: "account")
+  incomingApprovals: [TokenApproval!] @derivedFrom(field: "spenderAccount")
+  outgoingApprovals: [TokenApproval!] @derivedFrom(field: "ownerAccount")
+  swaps: [TokenSwap!] @derivedFrom(field: "account")
+}
+
+type TokenBalance @entity {
+  id: ID!
+  token: Token!
+  account: Account!
+  value: BigInt!
+}
+
+type TokenApproval @entity {
+  id: ID!
+  token: Token!
+  ownerAccount: Account!
+  spenderAccount: Account!
+  value: BigInt!
+}
+
+type TokenBurn @entity {
+  id: ID!
+  token: Token!
+  account: Account!
+  value: BigInt!
+}
+
+type TokenLocker @entity {
+  id: ID!
+  address: String!
+}
+
+#
+# DEX activities
+#
+
+type DEX @entity {
+  id: ID! # factory address
+  name: String!
+  swapRouters: [String!]!
+  pairs: [TokenPair!] @derivedFrom(field: "exchange")
+}
+
+type TokenPair @entity {
+  id: ID!
+  token0: Token!
+  token1: Token!
+  exchange: DEX!
+  pool: String!
+}
+
+type TokenSwap @entity {
+  id: ID!
+  pair: TokenPair!
+  tokenIn: Token!
+  tokenOut: Token!
+  swapIn: BigInt!
+  swapOut: BigInt!
+  swapInExact: Boolean!
+  account: Account!
+  exchange: DEX!
+}
+
+type TokenAddLiquidity @entity {
+  id: ID!
+  pair: TokenPair!
+  token0Amount: BigInt!
+  token1Amount: BigInt!
+	# only for V3/V4, otherwise 0
+	tickLower: Int
+	tickUpper: Int
+  # liquidity: BigInt!
+  account: Account!
+}
+
+type TokenRemoveLiquidity @entity {
+  id: ID!
+  pair: TokenPair!
+  token0Amount: BigInt!
+  token1Amount: BigInt!
+	# only for V3/V4, otherwise 0
+	tickLower: Int
+	tickUpper: Int
+	# liquidity: BigInt!
+  account: Account!
+}

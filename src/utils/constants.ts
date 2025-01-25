@@ -1,0 +1,6 @@
+export const zeroAddress = "0x0000000000000000000000000000000000000000";
+export const burnAddresses = [
+	"0x000000000000000000000000000000000000dead",
+	"0x00000000000000000000000000000000deadbeef",
+	"0xdeaddeaddeaddeaddeaddeaddeaddeaddeaddead",
+]

@@ -1,0 +1,19 @@
+{
+  "name": "story-dex-swaps-subgraph",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "goldsky subgraph deploy story-dex-swaps-subgraph/0.0.1",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@graphprotocol/graph-cli": "^0.94.0",
+    "@graphprotocol/graph-ts": "^0.37.0"
+  }
+}
