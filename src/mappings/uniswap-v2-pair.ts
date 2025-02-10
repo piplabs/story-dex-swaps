@@ -22,11 +22,6 @@ export function handlePositionMint(event: Mint): void {
     return;
   }
 
-  if (!WHITELISTED_DEX_ADDRESSES_MAPPING.has(tokenPair.exchange)) {
-    log.debug("DEX not whitelisted: {}", [tokenPair.exchange]);
-    return;
-  }
-
   const account = loadOrCreateAccount(event.params.sender);
 
   const addLiquidityId =
@@ -68,11 +63,6 @@ export function handlePositionBurn(event: Burn): void {
     return;
   }
 
-  if (!WHITELISTED_DEX_ADDRESSES_MAPPING.has(tokenPair.exchange)) {
-    log.debug("DEX not whitelisted: {}", [tokenPair.exchange]);
-    return;
-  }
-
   const account = loadOrCreateAccount(event.params.sender);
 
   const removeLiquidityId =
@@ -111,11 +101,6 @@ export function handleTokenSwap(event: Swap): void {
   let tokenPair = TokenPair.load(tokenPairId);
   if (!tokenPair) {
     log.debug("TokenPair not found for ID: {}", [tokenPairId]);
-    return;
-  }
-
-  if (!WHITELISTED_DEX_ADDRESSES_MAPPING.has(tokenPair.exchange)) {
-    log.debug("DEX not whitelisted: {}", [tokenPair.exchange]);
     return;
   }
 
