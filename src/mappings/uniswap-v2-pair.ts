@@ -22,7 +22,7 @@ export function handlePositionMint(event: Mint): void {
     return;
   }
 
-  if (WHITELISTED_DEX_ADDRESSES_MAPPING.has(tokenPair.exchange)) {
+  if (!WHITELISTED_DEX_ADDRESSES_MAPPING.has(tokenPair.exchange)) {
     log.debug("DEX not whitelisted: {}", [tokenPair.exchange]);
     return;
   }
@@ -33,8 +33,8 @@ export function handlePositionMint(event: Mint): void {
     event.transaction.hash.toHex() + "-" + event.transactionLogIndex.toString();
   const addLiquidity = new TokenAddLiquidity(addLiquidityId);
   addLiquidity.pair = tokenPair.id;
-  addLiquidity.token0Amount = event.params.amount0;
-  addLiquidity.token1Amount = event.params.amount1;
+  addLiquidity.token0amount = event.params.amount0;
+  addLiquidity.token1amount = event.params.amount1;
   addLiquidity.account = account.id;
   addLiquidity.save();
 
@@ -68,7 +68,7 @@ export function handlePositionBurn(event: Burn): void {
     return;
   }
 
-  if (WHITELISTED_DEX_ADDRESSES_MAPPING.has(tokenPair.exchange)) {
+  if (!WHITELISTED_DEX_ADDRESSES_MAPPING.has(tokenPair.exchange)) {
     log.debug("DEX not whitelisted: {}", [tokenPair.exchange]);
     return;
   }
@@ -79,8 +79,8 @@ export function handlePositionBurn(event: Burn): void {
     event.transaction.hash.toHex() + "-" + event.transactionLogIndex.toString();
   const removeLiquidity = new TokenRemoveLiquidity(removeLiquidityId);
   removeLiquidity.pair = tokenPair.id;
-  removeLiquidity.token0Amount = event.params.amount0;
-  removeLiquidity.token1Amount = event.params.amount1;
+  removeLiquidity.token0amount = event.params.amount0;
+  removeLiquidity.token1amount = event.params.amount1;
   removeLiquidity.account = account.id;
   removeLiquidity.save();
 
@@ -114,7 +114,7 @@ export function handleTokenSwap(event: Swap): void {
     return;
   }
 
-  if (WHITELISTED_DEX_ADDRESSES_MAPPING.has(tokenPair.exchange)) {
+  if (!WHITELISTED_DEX_ADDRESSES_MAPPING.has(tokenPair.exchange)) {
     log.debug("DEX not whitelisted: {}", [tokenPair.exchange]);
     return;
   }
@@ -131,10 +131,10 @@ export function handleTokenSwap(event: Swap): void {
   tokenPairEvent.account = account.id;
   tokenPairEvent.pair = tokenPair.id;
   tokenPairEvent.eventType = "swap";
-  tokenPairEvent.amount0In = event.params.amount0In;
-  tokenPairEvent.amount1Out = event.params.amount1Out;
-  tokenPairEvent.amount0Out = event.params.amount0Out;
-  tokenPairEvent.amount1In = event.params.amount1In;
+  tokenPairEvent.amount0in = event.params.amount0In;
+  tokenPairEvent.amount1out = event.params.amount1Out;
+  tokenPairEvent.amount0out = event.params.amount0Out;
+  tokenPairEvent.amount1in = event.params.amount1In;
   // TODO: make sure Transfer events are all processed BEFORE accounting for balances of each pair, so we can get the
   // post-event balances (e.g. reserve of asset0 of a pair AFTER adding liquidity)
   const pairToken0 = TokenBalance.load(tokenPair.token0 + "-" + tokenPairId);

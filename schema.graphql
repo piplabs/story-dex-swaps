@@ -70,8 +70,8 @@ type TokenPair @entity {
 type TokenAddLiquidity @entity {
   id: ID!
   pair: TokenPair!
-  token0Amount: BigInt!
-  token1Amount: BigInt!
+  token0amount: BigInt!
+  token1amount: BigInt!
 	# only for V3/V4, otherwise 0
 	tickLower: Int
 	tickUpper: Int
@@ -81,8 +81,8 @@ type TokenAddLiquidity @entity {
 type TokenRemoveLiquidity @entity {
   id: ID!
   pair: TokenPair!
-  token0Amount: BigInt!
-  token1Amount: BigInt!
+  token0amount: BigInt!
+  token1amount: BigInt!
 	# only for V3/V4, otherwise 0
 	tickLower: Int
 	tickUpper: Int
@@ -100,10 +100,11 @@ type TokenPairEvent @entity {
   eventType: String! # creation -> Pair created; swap -> Swap; join -> Add liquidity; exit -> Remove liquidity
   amount0: BigInt # only for joins and exits
   amount1: BigInt # only for joins and exits
-  amount0In: BigInt # only for swaps
-  amount1Out: BigInt # only for swaps
-  amount0Out: BigInt # only for swaps
-  amount1In: BigInt # only for swaps
+  # keep as lower case for easier querying in go
+  amount0in: BigInt # only for swaps
+  amount1out: BigInt # only for swaps
+  amount0out: BigInt # only for swaps
+  amount1in: BigInt # only for swaps
   reserve0: BigInt # only for joins, exists and swaps
   reserve1: BigInt # only for joins, exists and swaps
 }

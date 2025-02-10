@@ -567,8 +567,8 @@ export class TokenAddLiquidity extends Entity {
     this.set("pair", Value.fromString(value));
   }
 
-  get token0Amount(): BigInt {
-    let value = this.get("token0Amount");
+  get token0amount(): BigInt {
+    let value = this.get("token0amount");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -576,12 +576,12 @@ export class TokenAddLiquidity extends Entity {
     }
   }
 
-  set token0Amount(value: BigInt) {
-    this.set("token0Amount", Value.fromBigInt(value));
+  set token0amount(value: BigInt) {
+    this.set("token0amount", Value.fromBigInt(value));
   }
 
-  get token1Amount(): BigInt {
-    let value = this.get("token1Amount");
+  get token1amount(): BigInt {
+    let value = this.get("token1amount");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -589,8 +589,8 @@ export class TokenAddLiquidity extends Entity {
     }
   }
 
-  set token1Amount(value: BigInt) {
-    this.set("token1Amount", Value.fromBigInt(value));
+  set token1amount(value: BigInt) {
+    this.set("token1amount", Value.fromBigInt(value));
   }
 
   get tickLower(): i32 {
@@ -689,8 +689,8 @@ export class TokenRemoveLiquidity extends Entity {
     this.set("pair", Value.fromString(value));
   }
 
-  get token0Amount(): BigInt {
-    let value = this.get("token0Amount");
+  get token0amount(): BigInt {
+    let value = this.get("token0amount");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -698,12 +698,12 @@ export class TokenRemoveLiquidity extends Entity {
     }
   }
 
-  set token0Amount(value: BigInt) {
-    this.set("token0Amount", Value.fromBigInt(value));
+  set token0amount(value: BigInt) {
+    this.set("token0amount", Value.fromBigInt(value));
   }
 
-  get token1Amount(): BigInt {
-    let value = this.get("token1Amount");
+  get token1amount(): BigInt {
+    let value = this.get("token1amount");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -711,8 +711,8 @@ export class TokenRemoveLiquidity extends Entity {
     }
   }
 
-  set token1Amount(value: BigInt) {
-    this.set("token1Amount", Value.fromBigInt(value));
+  set token1amount(value: BigInt) {
+    this.set("token1amount", Value.fromBigInt(value));
   }
 
   get tickLower(): i32 {
@@ -921,8 +921,8 @@ export class TokenPairEvent extends Entity {
     }
   }
 
-  get amount0In(): BigInt | null {
-    let value = this.get("amount0In");
+  get amount0in(): BigInt | null {
+    let value = this.get("amount0in");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -930,16 +930,16 @@ export class TokenPairEvent extends Entity {
     }
   }
 
-  set amount0In(value: BigInt | null) {
+  set amount0in(value: BigInt | null) {
     if (!value) {
-      this.unset("amount0In");
+      this.unset("amount0in");
     } else {
-      this.set("amount0In", Value.fromBigInt(<BigInt>value));
+      this.set("amount0in", Value.fromBigInt(<BigInt>value));
     }
   }
 
-  get amount1Out(): BigInt | null {
-    let value = this.get("amount1Out");
+  get amount1out(): BigInt | null {
+    let value = this.get("amount1out");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -947,16 +947,16 @@ export class TokenPairEvent extends Entity {
     }
   }
 
-  set amount1Out(value: BigInt | null) {
+  set amount1out(value: BigInt | null) {
     if (!value) {
-      this.unset("amount1Out");
+      this.unset("amount1out");
     } else {
-      this.set("amount1Out", Value.fromBigInt(<BigInt>value));
+      this.set("amount1out", Value.fromBigInt(<BigInt>value));
     }
   }
 
-  get amount0Out(): BigInt | null {
-    let value = this.get("amount0Out");
+  get amount0out(): BigInt | null {
+    let value = this.get("amount0out");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -964,16 +964,16 @@ export class TokenPairEvent extends Entity {
     }
   }
 
-  set amount0Out(value: BigInt | null) {
+  set amount0out(value: BigInt | null) {
     if (!value) {
-      this.unset("amount0Out");
+      this.unset("amount0out");
     } else {
-      this.set("amount0Out", Value.fromBigInt(<BigInt>value));
+      this.set("amount0out", Value.fromBigInt(<BigInt>value));
     }
   }
 
-  get amount1In(): BigInt | null {
-    let value = this.get("amount1In");
+  get amount1in(): BigInt | null {
+    let value = this.get("amount1in");
     if (!value || value.kind == ValueKind.NULL) {
       return null;
     } else {
@@ -981,11 +981,11 @@ export class TokenPairEvent extends Entity {
     }
   }
 
-  set amount1In(value: BigInt | null) {
+  set amount1in(value: BigInt | null) {
     if (!value) {
-      this.unset("amount1In");
+      this.unset("amount1in");
     } else {
-      this.set("amount1In", Value.fromBigInt(<BigInt>value));
+      this.set("amount1in", Value.fromBigInt(<BigInt>value));
     }
   }
 

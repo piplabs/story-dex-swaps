@@ -1,4 +1,4 @@
-import { Address, BigInt, log } from "@graphprotocol/graph-ts";
+import { Address, log } from "@graphprotocol/graph-ts";
 
 import { DEX } from "../../generated/schema";
 import { WHITELISTED_DEX_ADDRESSES_MAPPING } from "./constants";
