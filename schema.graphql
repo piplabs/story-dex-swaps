@@ -1,4 +1,28 @@
 #
+# Account
+#
+
+type Account @entity {
+  id: ID!
+  tradingVolumeUSD: BigInt!
+  tradingVolumeNative: BigInt!
+  tvlUSD: BigInt!
+  tvlNative: BigInt!
+  balances: [TokenBalance!] @derivedFrom(field: "account")
+  swaps: [TokenSwap!] @derivedFrom(field: "account")
+}
+
+#
+# Block
+#
+
+type Block @entity {
+  id: ID!
+  height: Int!
+  timestamp: Timestamp!
+}
+
+#
 # Token
 #
 
@@ -9,87 +33,89 @@ type Token @entity {
   decimals: Int!
   totalSupply: BigInt!
   circulatingSupply: BigInt!
-  balances: [TokenBalance!] @derivedFrom(field: "token")
-  approvals: [TokenApproval!] @derivedFrom(field: "token")
-  burns: [TokenBurn!] @derivedFrom(field: "token")
-}
-
-type Account @entity {
-  id: ID!
-  balances: [TokenBalance!] @derivedFrom(field: "account")
-  incomingApprovals: [TokenApproval!] @derivedFrom(field: "spenderAccount")
-  outgoingApprovals: [TokenApproval!] @derivedFrom(field: "ownerAccount")
-  swaps: [TokenSwap!] @derivedFrom(field: "account")
+  latestPriceUSD: BigInt!
+  latestPriceNative: BigInt!
+  tvl: BigInt!
 }
 
 type TokenBalance @entity {
   id: ID!
   token: Token!
   account: Account!
-  value: BigInt!
+  amount: BigInt!
 }
 
-type TokenApproval @entity {
-  id: ID!
+type TokenPrice @entity(timeseries: true) {
+  id: Int8!
+  timestamp: Timestamp!
   token: Token!
-  ownerAccount: Account!
-  spenderAccount: Account!
-  value: BigInt!
+  priceUSD: BigInt!
+  priceNative: BigInt!
 }
 
-type TokenBurn @entity {
-  id: ID!
+type TokenPriceAggregate @aggregation(intervals: ["hour", "day"], source: "TokenPrice") {
+  id: Int8!
+  timestamp: Timestamp!
   token: Token!
-  account: Account!
-  value: BigInt!
-}
-
-type TokenLocker @entity {
-  id: ID!
-  address: String!
+  priceUSD: BigInt! @aggregate(fn: "last", arg: "priceUSD")
+  priceNative: BigInt! @aggregate(fn: "last", arg: "priceNative")
 }
 
 #
-# DEX activities
+# DEX
 #
 
 type DEX @entity {
   id: ID! # factory address
   name: String!
-  swapRouters: [String!]!
+  totalVolumeUSD: BigInt!
+  totalVolumeNative: BigInt!
+  tvlUSD: BigInt!
+  tvlNative: BigInt!
   pairs: [TokenPair!] @derivedFrom(field: "exchange")
 }
+
+#
+# TokenPair
+#
 
 type TokenPair @entity {
   id: ID!
   token0: Token!
   token1: Token!
+  fee: BigInt
   exchange: DEX!
   pool: String!
+  tvl0: BigInt!
+  tvl1: BigInt!
+  block: Block!
+  createdAtTxnId: String!
 }
+
+type TokenPairVolumeAggregate @aggregation(intervals: ["hour", "day"], source: "TokenSwap") {
+  id: Int8!
+  timestamp: Timestamp!
+  pair: TokenPair!
+  volumeUSD: BigInt! @aggregate(fn: "sum", arg: "amountUSD")
+  volumeNative: BigInt! @aggregate(fn: "sum", arg: "amountNative")
+}
+
+#
+# Token DEX activities
+#
 
 type TokenSwap @entity(timeseries: true) {
   id: Int8! # auto-increment
 	timestamp: Timestamp! # auto-set to block timestamp
 
   pair: TokenPair!
-  tokenIn: Token!
-  tokenOut: Token!
-  swapIn: BigInt!
-  swapOut: BigInt!
-  swapInExact: Boolean!
+  token0Amount: BigInt!
+  token1Amount: BigInt!
+  zeroForOne: Boolean!
   account: Account!
+  amountUSD: BigInt!
+  amountNative: BigInt!
   exchange: DEX!
-
-	price: BigInt!
-	volume: BigInt!
-}
-
-type TokenVolume @aggregation(intervals: ["hour", "day"], source: "TokenSwap") {
-	id: Int8!
-	timestamp: Timestamp!
-	pair: TokenPair!
-	volume: BigInt! @aggregate(fn: "sum", arg: "volume")
 }
 
 type TokenAddLiquidity @entity {
@@ -100,7 +126,6 @@ type TokenAddLiquidity @entity {
 	# only for V3/V4, otherwise 0
 	tickLower: Int
 	tickUpper: Int
-  # liquidity: BigInt!
   account: Account!
 }
 
@@ -112,6 +137,24 @@ type TokenRemoveLiquidity @entity {
 	# only for V3/V4, otherwise 0
 	tickLower: Int
 	tickUpper: Int
-	# liquidity: BigInt!
   account: Account!
+}
+
+type TokenPairEvent @entity {
+  id: ID! # txnId + txnIndex + eventIndex
+  block: Block!
+  txnId: String!
+  txnIndex: Int!
+  eventIndex: Int!
+  account: Account!
+  pair: TokenPair!
+  eventType: String! # creation -> Pair created; swap -> Swap; join -> Add liquidity; exit -> Remove liquidity
+  amount0: BigInt # only for joins and exits
+  amount1: BigInt # only for joins and exits
+  amount0In: BigInt # only for swaps
+  amount1Out: BigInt # only for swaps
+  amount0Out: BigInt # only for swaps
+  amount1In: BigInt # only for swaps
+  reserve0: BigInt # only for joins, exists and swaps
+  reserve1: BigInt # only for joins, exists and swaps
 }

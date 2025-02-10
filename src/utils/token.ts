@@ -1,7 +1,8 @@
-import { Address, BigDecimal, ethereum } from "@graphprotocol/graph-ts";
+import { Address, BigInt } from "@graphprotocol/graph-ts";
 
 import { ERC20 } from "../../generated/ERC20/ERC20";
 import { Token } from "../../generated/schema";
+import { PRICE_PRECISION } from "./constants";
 
 export function loadOrCreateToken(address: Address): Token | null {
   let token = Token.load(address.toHex());
@@ -40,7 +41,20 @@ export function loadOrCreateToken(address: Address): Token | null {
     token.symbol = symbolResult.value;
     token.decimals = decimalsResult.value;
     token.totalSupply = totalSupplyResult.value;
-    token.circulatingSupply = totalSupplyResult.value; // TODO: calculate circulating supply using external APIs
+    token.circulatingSupply = totalSupplyResult.value; // TODO: calculate initial circulating supply using external APIs
+    if (token.symbol === "USDC") {
+      token.latestPriceUSD = PRICE_PRECISION;
+    }
+    else {    
+      token.latestPriceUSD = BigInt.zero();
+    }
+    if (token.symbol === "IP") {
+      token.latestPriceNative = PRICE_PRECISION;
+    }
+    else {
+      token.latestPriceNative = BigInt.zero();
+    }
+    token.tvl = BigInt.zero();
     token.save();
   }
   return token;
