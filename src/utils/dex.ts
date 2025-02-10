@@ -13,10 +13,6 @@ export function loadOrCreateDEX(address: Address): DEX | null {
   if (!dex) {
     dex = new DEX(address.toHexString());
 		dex.name = WHITELISTED_DEX_ADDRESSES_MAPPING[address.toHexString()]
-    dex.totalVolumeUSD = BigInt.zero();
-    dex.totalVolumeNative = BigInt.zero();
-    dex.tvlUSD = BigInt.zero();
-    dex.tvlNative = BigInt.zero();
     dex.save();
   }
   return dex;

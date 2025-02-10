@@ -53,8 +53,6 @@ export function handlePoolCreated(event: PoolCreated): void {
   tokenPair.exchange = dex.id;
   tokenPair.fee = BigInt.fromI32(event.params.fee);
   tokenPair.pool = event.params.pool.toHex();
-  tokenPair.tvl0 = BigInt.zero();
-  tokenPair.tvl1 = BigInt.zero();
   tokenPair.block = event.block.hash.toHex();
   tokenPair.createdAtTxnId = event.transaction.hash.toHex();
   tokenPair.save();

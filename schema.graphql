@@ -4,12 +4,7 @@
 
 type Account @entity {
   id: ID!
-  tradingVolumeUSD: BigInt!
-  tradingVolumeNative: BigInt!
-  tvlUSD: BigInt!
-  tvlNative: BigInt!
   balances: [TokenBalance!] @derivedFrom(field: "account")
-  swaps: [TokenSwap!] @derivedFrom(field: "account")
 }
 
 #
@@ -33,9 +28,7 @@ type Token @entity {
   decimals: Int!
   totalSupply: BigInt!
   circulatingSupply: BigInt!
-  latestPriceUSD: BigInt!
-  latestPriceNative: BigInt!
-  tvl: BigInt!
+  balances: [TokenBalance!] @derivedFrom(field: "token")
 }
 
 type TokenBalance @entity {
@@ -45,22 +38,6 @@ type TokenBalance @entity {
   amount: BigInt!
 }
 
-type TokenPrice @entity(timeseries: true) {
-  id: Int8!
-  timestamp: Timestamp!
-  token: Token!
-  priceUSD: BigInt!
-  priceNative: BigInt!
-}
-
-type TokenPriceAggregate @aggregation(intervals: ["hour", "day"], source: "TokenPrice") {
-  id: Int8!
-  timestamp: Timestamp!
-  token: Token!
-  priceUSD: BigInt! @aggregate(fn: "last", arg: "priceUSD")
-  priceNative: BigInt! @aggregate(fn: "last", arg: "priceNative")
-}
-
 #
 # DEX
 #
@@ -68,10 +45,6 @@ type TokenPriceAggregate @aggregation(intervals: ["hour", "day"], source: "Token
 type DEX @entity {
   id: ID! # factory address
   name: String!
-  totalVolumeUSD: BigInt!
-  totalVolumeNative: BigInt!
-  tvlUSD: BigInt!
-  tvlNative: BigInt!
   pairs: [TokenPair!] @derivedFrom(field: "exchange")
 }
 
@@ -86,37 +59,13 @@ type TokenPair @entity {
   fee: BigInt
   exchange: DEX!
   pool: String!
-  tvl0: BigInt!
-  tvl1: BigInt!
   block: Block!
   createdAtTxnId: String!
-}
-
-type TokenPairVolumeAggregate @aggregation(intervals: ["hour", "day"], source: "TokenSwap") {
-  id: Int8!
-  timestamp: Timestamp!
-  pair: TokenPair!
-  volumeUSD: BigInt! @aggregate(fn: "sum", arg: "amountUSD")
-  volumeNative: BigInt! @aggregate(fn: "sum", arg: "amountNative")
 }
 
 #
 # Token DEX activities
 #
-
-type TokenSwap @entity(timeseries: true) {
-  id: Int8! # auto-increment
-	timestamp: Timestamp! # auto-set to block timestamp
-
-  pair: TokenPair!
-  token0Amount: BigInt!
-  token1Amount: BigInt!
-  zeroForOne: Boolean!
-  account: Account!
-  amountUSD: BigInt!
-  amountNative: BigInt!
-  exchange: DEX!
-}
 
 type TokenAddLiquidity @entity {
   id: ID!

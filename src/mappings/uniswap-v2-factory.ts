@@ -52,9 +52,8 @@ export function handlePairCreated(event: PairCreated): void {
   tokenPair.token0 = token0.id;
   tokenPair.token1 = token1.id;
   tokenPair.exchange = dex.id;
+  tokenPair.fee = BigInt.fromI32(300); // Uniswap V2 has a 0.3% fee for all pairs
   tokenPair.pool = event.params.pair.toHex();
-  tokenPair.tvl0 = BigInt.zero();
-  tokenPair.tvl1 = BigInt.zero();
   tokenPair.block = event.block.hash.toHex();
   tokenPair.createdAtTxnId = event.transaction.hash.toHex();
   tokenPair.save();

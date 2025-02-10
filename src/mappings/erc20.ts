@@ -38,29 +38,25 @@ export function handleTransfer(event: Transfer): void {
     token.save();
   }
 
-  // Track balances for registered v2 and v3 pairs
-  const isFromKnownPair = TokenPair.load(from.toHex())
-  const isToKnownPair = TokenPair.load(to.toHex())
-
-  if (isFromKnownPair || isToKnownPair) {
-    let tokenBalance = TokenBalance.load(token.id + "-" + fromAccount.id);
-    if (!tokenBalance) {
-      tokenBalance = new TokenBalance(token.id + "-" + fromAccount.id);
-      tokenBalance.token = token.id;
-      tokenBalance.account = fromAccount.id;
-      tokenBalance.amount = BigInt.zero();
-    }
-
-    // sending from a pair to an address
-    if (isFromKnownPair) {
-      tokenBalance.amount = tokenBalance.amount.minus(value);
-    }
-
-    // sending from an address to a pair
-    if (isToKnownPair) {
-      tokenBalance.amount = tokenBalance.amount.plus(value);
-    }
-
-    tokenBalance.save();
+  let tokenBalanceFrom = TokenBalance.load(token.id + "-" + fromAccount.id);
+  if (!tokenBalanceFrom) {
+    tokenBalanceFrom = new TokenBalance(token.id + "-" + fromAccount.id);
+    tokenBalanceFrom.token = token.id;
+    tokenBalanceFrom.account = fromAccount.id;
+    tokenBalanceFrom.amount = BigInt.zero();
   }
+
+  let tokenBalanceTo = TokenBalance.load(token.id + "-" + toAccount.id);
+  if (!tokenBalanceTo) {
+    tokenBalanceTo = new TokenBalance(token.id + "-" + toAccount.id);
+    tokenBalanceTo.token = token.id;
+    tokenBalanceTo.account = toAccount.id;
+    tokenBalanceTo.amount = BigInt.zero();
+  }
+
+  tokenBalanceFrom.amount = tokenBalanceFrom.amount.minus(value);
+  tokenBalanceTo.amount = tokenBalanceTo.amount.plus(value);
+
+  tokenBalanceFrom.save();
+  tokenBalanceTo.save();
 }

@@ -1,16 +1,9 @@
-import { BigInt } from "@graphprotocol/graph-ts";
 export const zeroAddress = "0x0000000000000000000000000000000000000000";
 export const burnAddresses = [
   "0x000000000000000000000000000000000000dead",
   "0x00000000000000000000000000000000deadbeef",
   "0xdeaddeaddeaddeaddeaddeaddeaddeaddeaddead",
 ];
-
-export const USDC_ADDRESS =
-  "0x40fCa9cB1AB15eD9B5bDA19A52ac00A78AE08e1D".toLowerCase(); // Example address
-export const IP_ADDRESS =
-  "0x1516000000000000000000000000000000000000".toLowerCase(); // odyssey address
-export const PRICE_PRECISION = BigInt.fromString("1000000000000000000"); // 1e18
 
 // All factory addresses
 // @ts-ignore
